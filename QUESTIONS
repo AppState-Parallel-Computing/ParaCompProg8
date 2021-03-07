@@ -1,0 +1,67 @@
+1) Consider the NAIVE version and a matrix of size 2^14 by 2^14.
+For each of the following block sizes, indicate the number of threads 
+per block, the total number of threads, the grid dimensions,
+and the total number of blocks.
+
+a. 8 by 8
+threads per block: 
+total number of threads: 
+size of the grid (x by x): 
+total number of blocks: 
+
+b. 16 by 16
+threads per block: 
+total number of threads: 
+size of the grid (x by x): 
+total number of blocks: 
+
+c. 32 by 32
+threads per block: 
+total number of threads: 
+size of the grid (x by x): 
+total number of blocks: 
+
+2) Now, time the NAIVE version with a matrix of size 2^14 by 2^14 with each of 
+the possible block dimensions. You should see that the block of 
+size 32 by 32 provides the worst performance. (Although, it is not significantly
+worse.)  Speculate why.  (Consider how block are scheduled.)
+
+
+3) Consider the TILED version and a matrix of size 2^14 by 2^14.
+For each of the following block sizes and tile sizes, indicate the number of 
+threads per block, the number of transposes performed by a single thread,
+the total number of threads, the grid dimensions,
+and the total number of blocks. 
+
+a. block of size 16 by 16; tile of size 2 by 2
+threads per block: 
+transposes per thread: 
+total number of threads: 
+size of the grid (x by x): 
+total number of blocks: 
+
+b. block of size 16 by 16; tile of size 4 by 4
+threads per block: 
+transposes per thread: 
+total number of threads: 
+size of the grid (x by x): 
+total number of blocks: 
+
+c. block of size 16 by 16; tile of size 8 by 8
+threads per block: 
+transposes per thread: 
+total number of threads: 
+size of the grid (x by x):
+total number of blocks: 
+
+4) Now, run and time the TILED version using the parameters indicated
+above and the -time option. You should see that increasing the size of the 
+tile will result in decreased speedup. Explain why.
+
+
+5) Run the TILED and OPTTILED versions with a matrix of size 2^14 by 2^14, 
+block dimensions of size 16 by 16, a tile size of size 4 by 4. You should 
+see that the OPTTILED provides slightly better performance.  Explain why.
+
+6) Why can't shared memory be used in the OPTTILED implementation?
+
