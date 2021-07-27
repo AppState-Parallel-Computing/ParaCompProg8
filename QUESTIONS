@@ -1,67 +1,62 @@
-1) Consider the NAIVE version and a matrix of size 2^14 by 2^14.
-For each of the following block sizes, indicate the number of threads 
-per block, the total number of threads, the grid dimensions,
-and the total number of blocks.
+1) Consider running the NAIVE version with the following command line:
 
-a. 8 by 8
+./transpose -n 14 -b 16 -naive -time
+
+What are the number of:
 threads per block: 
-total number of threads: 
 size of the grid (x by x): 
 total number of blocks: 
-
-b. 16 by 16
-threads per block: 
 total number of threads: 
+
+2) Consider running the TILED version with the following command line:
+
+./transpose -n 14 -b 16 -t 2 -tiled -time
+
+What are the number of:
+threads per block: 
 size of the grid (x by x): 
 total number of blocks: 
-
-c. 32 by 32
-threads per block: 
 total number of threads: 
-size of the grid (x by x): 
-total number of blocks: 
 
-2) Now, time the NAIVE version with a matrix of size 2^14 by 2^14 with each of 
-the possible block dimensions. You should see that the block of 
-size 32 by 32 provides the worst performance. (Although, it is not significantly
-worse.)  Speculate why.  (Consider how block are scheduled.)
-
-
-3) Consider the TILED version and a matrix of size 2^14 by 2^14.
-For each of the following block sizes and tile sizes, indicate the number of 
-threads per block, the number of transposes performed by a single thread,
-the total number of threads, the grid dimensions,
-and the total number of blocks. 
-
-a. block of size 16 by 16; tile of size 2 by 2
-threads per block: 
-transposes per thread: 
-total number of threads: 
-size of the grid (x by x): 
-total number of blocks: 
-
-b. block of size 16 by 16; tile of size 4 by 4
-threads per block: 
-transposes per thread: 
-total number of threads: 
-size of the grid (x by x): 
-total number of blocks: 
-
-c. block of size 16 by 16; tile of size 8 by 8
-threads per block: 
-transposes per thread: 
-total number of threads: 
-size of the grid (x by x):
-total number of blocks: 
-
-4) Now, run and time the TILED version using the parameters indicated
-above and the -time option. You should see that increasing the size of the 
-tile will result in decreased speedup. Explain why.
+3) Now, run the two command lines indicated above. You should see that
+the tiled version performs slightly faster than the naive versions 
+(this should be the general trend although timing on the CUDA machine 
+can vary widely).  Explain why the tiled version tends to provide 
+higher performance. Take a look at the "7.5 Optimizing for CUDA"
+slides.
 
 
-5) Run the TILED and OPTTILED versions with a matrix of size 2^14 by 2^14, 
-block dimensions of size 16 by 16, a tile size of size 4 by 4. You should 
-see that the OPTTILED provides slightly better performance.  Explain why.
+4) Report the timing for running the following command lines:
+./transpose -n 14 -b 16 -t 2  -tiled -time
+./transpose -n 14 -b 16 -t 4  -tiled -time
+./transpose -n 14 -b 16 -t 8  -tiled -time
 
-6) Why can't shared memory be used in the OPTTILED implementation?
 
+5) For problem 4), you should have seen that the performance decreased with increasing
+tile size.  Why?
+
+
+6) Now, run these two command lines and report their results:
+./transpose -n 14 -b 16 -t 4  -tiled -time
+./transpose -n 14 -b 16 -opttiled -time
+
+
+7) You should see that the OPTTILED version provides better performance than the
+TILED version. (This is in general. Individual runs can vary widely.)
+Explain why. Hint: think about what is happening in these two different
+versions in terms of how memory is accessed.  For the TILED version, threads in lockstep
+will read an element and write it to the destination. It will do this
+16 times. For the OPTTILED version, threads in lockstep will read 16 elements by
+performing 8 reads, transpose those in the local array, and write the 16 elements 
+by performing 8 writes to the destination array.
+(Chapter 3 can help you come up with a thorough answer to this.)
+
+
+8) Why can't shared memory be used in the OPTTILED implementation?
+
+9) Finally test your code with these parameters to make sure you
+don't access outside of the matrix array.
+
+./transpose -n 4 -b 32 -naive
+./transpose -n 4 -b 32 -t 2 -tiled
+./transpose -n 4 -b 32 -opttiled

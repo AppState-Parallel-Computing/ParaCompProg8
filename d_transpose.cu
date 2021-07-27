@@ -59,6 +59,8 @@ float d_transpose(float * result, float * input, int width, int blkDim,
     {
         //TO DO
         //Define the block and the grid and launch the tiled kernel
+        //This is similar to above, but not exactly the same.
+        //You'll need to use the blkDim and the tileSz parameters.
         //Be careful to not define a grid that is too big
     } else if (which == OPTTILED)
     {
@@ -96,11 +98,14 @@ __global__
 void d_transposeNaiveKernel(float * d_result, float * d_input, int width) 
 {
     //TO DO
-    //You need to use the block and thread identifiers, and the
-    //block dimensions to calculate the row and the col of the
-    //input element to transpose. Then, you'll take the row and
-    //col and flatten those values to index into the d_input and
-    //d_result arrays.
+    //1) Use the blockIdx.y, blockDim.y and threadIdx.y
+    //   to calculate the row of the input matrix
+    //2) Use the blockIdx.x, blockDim.x and threadIdx.x
+    //   to calculate the col of the input matrix
+    //3) Flatten the row and col to determine an index into the input array
+    //4) Flatten the col and row to determine an index into the result array
+    //5) Do the tranpose
+
     //Be careful to not access outside of the dimensions of the arrays.
 }      
 
@@ -121,11 +126,20 @@ void d_transposeTiledKernel(float * d_result, float * d_input,
 {
 
     //TO DO
-    //You'll need to use the block and thread identifiers, the block
-    //dimensions, and the tile size to calculate the row and the
-    //column of the first element in the tile to transpose.
+    //1) Use the blockIdx.y, blockDim.y, threadIdx.y, and tileSz
+    //   to calculate the smallest row of a tile of the input matrix.
+    //2) Use the blockIdx.x, blockDim.x and threadIdx.x, and tileSz
+    //   to calculate the smallest col of a tile of the input matrix.
+    //3) Loop through the tile of the input matrix. 
+    //4) In the loop, flatten the current row and current col to determine an index 
+    //   into the input array.
+    //5) In the loop, flatten the current col and current row to determine an index 
+    //   into the result array.
+    //6) In the loop, copy the input element into the result array.
+
     //Be careful to not access outside of the bounds of the
     //input and result matrices.
+
 }      
 
 /*
@@ -146,16 +160,13 @@ void swap(float * fval1, float * fval2)
    (*fval2) = tmp;
 }
 
-#define PRINT 0
-//#define PRINT (threadIdx.x == 1 && threadIdx.y == 1 && blockIdx.x == 0 && blockIdx.y == 0)
-//#define PRINT (row == 0 && col == 4)
 
 /*  
     d_transposeOptTiledKernel
     This kernel performs a optimized tiled transpose of an input matrix 
     and stores the result in the d_result matrix.
     Each matrix is of size width by width and has been linearized.
-    Each thread performs the transpose of 4  by 4 elements.  
+    Each thread performs the transpose of 16 elements.  
     Inputs:
     d_result - pointer to the array in which the result is stored
     d_input - pointer to the array containing the input
@@ -167,14 +178,24 @@ void d_transposeOptTiledKernel(float * d_result, float * d_input, int width)
     float tile[OPTTILESZ][OPTTILESZ];
 
     //TO DO
-    //You'll need to use the block and thread identifiers, the block
-    //dimensions, and the tile size (4) to calculate the row and the
-    //column of the first element in the tile to transpose.
+    //1) Use the blockIdx.y, blockDim.y, threadIdx.y, and OPTTILESZ
+    //   to calculate the smallest row of a tile of the input matrix.
+    //2) Use the blockIdx.x, blockDim.x and threadIdx.x, and OPTTILESZ
+    //   to calculate the smallest col of a tile of the input matrix.
+    //3) Loop through the tile of the input matrix, copying elements 
+    //   from the input array into the tile array. Instead of copying 
+    //   16 float values, copy 8 doubles (two doubles per row). You can do 
+    //   this trick using double pointers. 
+    //4) Do the transpose in the tile array (six swaps).
+    //5) Use a loop to copy the elements in the tile array into the result 
+    //   array.  Again, you'll use double pointers so that you end up 
+    //   copying 8 doubles instead of 16 floats.
+
+    //Of course like the previous kernels, you'll need to flatten the row and
+    //column values.
+
     //Be careful to not access outside of the bounds of the
     //input and result matrices.
 
-    //Copy the appropriate elements into the tile array.
-    //Then perform the transpose in the tile array (six swaps).
-    //Finally, copy the transposed elements to the results
 }      
 
