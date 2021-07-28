@@ -60,7 +60,7 @@ float d_transpose(float * result, float * input, int width, int blkDim,
         //TO DO
         //Define the block and the grid and launch the tiled kernel
         //This is similar to above, but not exactly the same.
-        //You'll need to use the blkDim and the tileSz parameters.
+        //You'll need to use the width, blkDim, and tileSz parameters.
         //Be careful to not define a grid that is too big
     } else if (which == OPTTILED)
     {

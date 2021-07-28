@@ -1,4 +1,4 @@
-1) Consider running the NAIVE version with the following command line:
+1) Consider running the naive version with the following command line:
 
 ./transpose -n 14 -b 16 -naive -time
 
@@ -8,7 +8,7 @@ size of the grid (x by x):
 total number of blocks: 
 total number of threads: 
 
-2) Consider running the TILED version with the following command line:
+2) Consider running the tiled version with the following command line:
 
 ./transpose -n 14 -b 16 -t 2 -tiled -time
 
@@ -41,21 +41,21 @@ tile size.  Why?
 ./transpose -n 14 -b 16 -opttiled -time
 
 
-7) You should see that the OPTTILED version provides better performance than the
-TILED version. (This is in general. Individual runs can vary widely.)
+7) You should see that the opttiled version in provides better performance than the
+tiled version in question 5. (This is in general. Individual runs can vary widely.)
 Explain why. Hint: think about what is happening in these two different
-versions in terms of how memory is accessed.  For the TILED version, threads in lockstep
-will read an element and write it to the destination. It will do this
-16 times. For the OPTTILED version, threads in lockstep will read 16 elements by
-performing 8 reads, transpose those in the local array, and write the 16 elements 
-by performing 8 writes to the destination array.
+versions in terms of how memory is accessed.  For the tiled version, 
+threads in lockstep will read an element and write it to the destination. 
+It will do this 16 times. For the opttiled version, threads in lockstep will 
+read 16 elements by performing 8 reads, transpose those in the local array, 
+and write the 16 elements by performing 8 writes to the destination array.
 (Chapter 3 can help you come up with a thorough answer to this.)
 
 
-8) Why can't shared memory be used in the OPTTILED implementation?
+8) Why can't shared memory be used in the opttiled implementation?
 
 9) Finally test your code with these parameters to make sure you
-don't access outside of the matrix array.
+don't access outside of the matrix array. Report their timings.
 
 ./transpose -n 4 -b 32 -naive
 ./transpose -n 4 -b 32 -t 2 -tiled
