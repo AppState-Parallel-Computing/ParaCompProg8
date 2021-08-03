@@ -42,7 +42,7 @@ tile size.  Why?
 
 
 7) You should see that the opttiled version in provides better performance than the
-tiled version in question 5. (This is in general. Individual runs can vary widely.)
+tiled version in question 6. (This is in general. Individual runs can vary widely.)
 Explain why. Hint: think about what is happening in these two different
 versions in terms of how memory is accessed.  For the tiled version, 
 threads in lockstep will read an element and write it to the destination. 
@@ -57,6 +57,6 @@ and write the 16 elements by performing 8 writes to the destination array.
 9) Finally test your code with these parameters to make sure you
 don't access outside of the matrix array. Report their timings.
 
-./transpose -n 4 -b 32 -naive
-./transpose -n 4 -b 32 -t 2 -tiled
-./transpose -n 4 -b 32 -opttiled
+./transpose -n 4 -b 32 -naive -time
+./transpose -n 4 -b 32 -t 2 -tiled -time
+./transpose -n 4 -b 32 -opttiled -time
