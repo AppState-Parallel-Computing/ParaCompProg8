@@ -1,11 +1,16 @@
-NVCC = /usr/local/cuda-11.1/bin/nvcc
+NVCC = /usr/bin/nvcc
 CC = g++
 
-#Optimization flags. Don't use this for debugging.
-NVCCFLAGS = -c -m64 -O2 --compiler-options -Wall -Xptxas -O2,-v
+#No optmization flags
+#--compiler-options sends option to host compiler; -Wall is all warnings
+#NVCCFLAGS = -c --compiler-options -Wall
 
-#No optimizations. Debugging flags. Use this for debugging.
-#NVCCFLAGS = -c -g -G -m64 --compiler-options -Wall
+#Optimization flags: -O2 gets sent to host compiler; -Xptxas -O2 is for
+#optimizing PTX
+NVCCFLAGS = -c -O2 -Xptxas -O2 --compiler-options -Wall
+
+#Flags for debugging
+#NVCCFLAGS = -c -G --compiler-options -Wall --compiler-options -g
 
 OBJS = wrappers.o transpose.o h_transpose.o d_transpose.o
 .SUFFIXES: .cu .o .h 
